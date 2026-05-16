@@ -1,0 +1,22 @@
+/**
+ * Configuração de Variáveis de Ambiente
+ * 
+ * ATENÇÃO: Este arquivo é gerado automaticamente no momento do deploy
+ * via script de entrypoint do Docker.
+ * 
+ * NÃO commit este arquivo com valores reais no repositório!
+ * O valor {{GROQ_API_KEY}} será substituído pela variável de ambiente.
+ */
+
+window.ENV_CONFIG = {
+  GROQ_API_KEY: '{{GROQ_API_KEY}}',
+  WHATSAPP_NUMBER: '{{WHATSAPP_NUMBER}}',
+  SITE_URL: '{{SITE_URL}}'
+};
+
+// Verifica se a chave API está configurada
+if (!window.ENV_CONFIG.GROQ_API_KEY || window.ENV_CONFIG.GROQ_API_KEY === '{{GROQ_API_KEY}}') {
+  console.error('[Ê-Bot] ERRO: GROQ_API_KEY não está configurada!');
+  console.error('[Ê-Bot] Para deploy Docker: defina a variável GROQ_API_KEY no docker-compose ou ambiente.');
+  console.error('[Ê-Bot] Exemplo: export GROQ_API_KEY=sua_chave_aqui');
+}

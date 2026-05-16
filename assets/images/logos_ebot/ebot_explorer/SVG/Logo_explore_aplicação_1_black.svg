@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_2" data-name="Camada 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 373.11 186.86">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-size: 36px;
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        fill: #ef7a1a;
+      }
+
+      .cls-2, .cls-3, .cls-5 {
+        font-family: CocogooseProTrial-Bold, CocogooseProTrial;
+        font-weight: 700;
+      }
+
+      .cls-6, .cls-5 {
+        fill: #3f4b48;
+      }
+
+      .cls-3, .cls-5 {
+        font-size: 71.31px;
+      }
+
+      .cls-7 {
+        letter-spacing: -.04em;
+      }
+
+      .cls-8 {
+        fill: #f18a00;
+      }
+    </style>
+  </defs>
+  <g id="Logo_clinical_black_aplicação_1">
+    <text class="cls-5" transform="translate(235.67 105.91)"><tspan x="0" y="0">bot</tspan></text>
+    <text class="cls-2" transform="translate(183.6 142.35)"><tspan x="0" y="0">explo</tspan><tspan class="cls-7" x="119.46" y="0">r</tspan><tspan x="138.95" y="0">er</tspan></text>
+    <text class="cls-3" transform="translate(185.41 105.91)"><tspan x="0" y="0">ê</tspan></text>
+    <path class="cls-6" d="M4.64,56.87s5.04.61,5.04,4.03,1.82,24.4,1.82,24.4c0,0-.61,6.45-5.24,6.45s-6.25-3.23-6.25-6.05v-22.79s0-5.04,4.64-6.05Z"/>
+    <path class="cls-6" d="M168.91,56.87s5.04.61,5.04,4.03,1.82,24.4,1.82,24.4c0,0-.61,6.45-5.24,6.45s-6.25-3.23-6.25-6.05v-22.79s0-5.04,4.64-6.05Z"/>
+    <path class="cls-4" d="M17.08,64.81c.36,7.11,6.62,51.66,55.02,95.83-1.51,19.97-1.44,17.77-1.53,19.2s-1.02,5.86.62,6.71,2.95-.11,4.76-1.78,59.97-47.71,80-106.64c17.18-53.61-139.07-14.6-138.88-13.32Z"/>
+    <path class="cls-8" d="M87.35,0C55.16,0,14.32,27.09,16.74,61.04s22.69,69.04,69.28,69.04,72.61-39.77,72.61-69.04S129.82,0,87.35,0Z"/>
+    <ellipse class="cls-1" cx="55.95" cy="51.9" rx="9.05" ry="9.14"/>
+    <ellipse class="cls-1" cx="119.29" cy="51.9" rx="9.05" ry="9.14"/>
+    <path class="cls-1" d="M83.65,79.15s-12.19-.64-20.21-2.89c-8.02-2.25-9.37,9.15-7.49,12.19s11.27,5.93,31.67,5.93,30.6-2.41,31.67-7.86-2.18-13.57-9.05-10.55c-6.87,3.02-8.64,3.18-26.6,3.18Z"/>
+  </g>
+</svg>
