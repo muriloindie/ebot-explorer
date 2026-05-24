@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ê-Bot Explorer | Inteligência para Turismo</title>
+  <link rel="icon" href="./assets/favicon.ico" sizes="any">
   
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/typography.css">
@@ -15,7 +17,8 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/responsive.css">
   <style>
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body { overflow-x: hidden; max-width: 100vw; }
     .explorer-nav-link { color: var(--dark); font-weight: 600; opacity: 0.78; }
     .explorer-nav-link:hover { color: var(--primary); opacity: 1; }
     .explorer-hero-kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.85rem; margin: 2rem 0 2.25rem; }
@@ -57,24 +60,38 @@
     .explorer-flow-card::before { content: attr(data-step); display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 999px; color: white; background: var(--primary); font-size: 0.78rem; font-weight: 800; margin-bottom: 1rem; }
     .explorer-flow-card h3 { color: var(--dark); font-size: 1rem; margin-bottom: 0.5rem; }
     .explorer-flow-card p { color: var(--text-body); font-size: 0.88rem; line-height: 1.55; }
+    .explorer-scenic-section { position: relative; overflow: hidden; background-position: center; background-size: cover; }
+    .explorer-scenic-section::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(15, 24, 20, 0.58), rgba(243,156,18,0.18)); pointer-events: none; }
+    .explorer-scenic-section .container { position: relative; z-index: 1; }
+    .explorer-journey-bg { background-image: url('./assets/images/sections/journey/paisagem-verde.webp'); }
+    .explorer-implant-bg { background-image: url('./assets/images/sections/implantacao/paisagem-turistica.webp'); }
+    .explorer-scenic-section .h2, .explorer-scenic-section .body-large { color: #fff; text-shadow: 0 14px 42px rgba(0,0,0,0.28); }
+    .explorer-scenic-section .explorer-section-eyebrow { color: #ffd37a; }
+    .explorer-scenic-section .explorer-journey-card, .explorer-scenic-section .explorer-flow-card { background: rgba(255,255,255,0.22) !important; border-color: rgba(255,255,255,0.34) !important; box-shadow: 0 28px 80px rgba(0,0,0,0.18); backdrop-filter: blur(22px) saturate(1.2); -webkit-backdrop-filter: blur(22px) saturate(1.2); }
+    .explorer-scenic-section .explorer-journey-card h4, .explorer-scenic-section .explorer-flow-card h3 { color: #fff; }
+    .explorer-scenic-section .explorer-journey-card p, .explorer-scenic-section .explorer-flow-card p, .explorer-scenic-section .text-small { color: rgba(255,255,255,0.86); }
+    .explorer-scenic-section .journey-icon { background: rgba(255,255,255,0.94); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.78), 0 16px 34px rgba(0,0,0,0.12); }
+    .explorer-implant-bg .btn-outline { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 18px 44px rgba(230,126,34,0.32); }
+    .explorer-implant-bg .btn-outline:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; transform: translateY(-3px); box-shadow: 0 24px 58px rgba(230,126,34,0.42); }
     .explorer-journey-row { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; align-items: stretch; }
-    .explorer-journey-card { padding: 1.25rem !important; border-color: rgba(243,156,18,0.26) !important; min-height: 238px; display: flex; flex-direction: column; }
-    .explorer-journey-card h4 { font-weight: 800; margin-bottom: 0.5rem; color: var(--dark); letter-spacing: -0.02em; }
+    .explorer-journey-card { padding: 1.25rem !important; border-color: rgba(243,156,18,0.26) !important; min-height: 238px; display: grid; grid-template-columns: auto 1fr; align-content: start; align-items: center; gap: 0.9rem 0.85rem; }
+    .explorer-journey-card h4 { font-weight: 800; margin: 0; color: var(--dark); letter-spacing: -0.02em; }
     .explorer-journey-card .text-small { line-height: 1.5; }
-    .journey-icon { width: 54px; height: 54px; position: relative; margin-bottom: 1rem; border-radius: 18px; background: linear-gradient(135deg, rgba(243,156,18,0.14), rgba(230,126,34,0.08)); box-shadow: inset 0 0 0 1px rgba(243,156,18,0.24), 0 16px 34px rgba(230,126,34,0.12); flex-shrink: 0; }
+    .explorer-journey-card .text-small { grid-column: 1 / -1; margin: 0; }
+    .journey-icon { width: 62px; height: 62px; position: relative; margin: 0; border-radius: 20px; background: linear-gradient(135deg, rgba(243,156,18,0.14), rgba(230,126,34,0.08)); box-shadow: inset 0 0 0 1px rgba(243,156,18,0.24), 0 16px 34px rgba(230,126,34,0.12); flex-shrink: 0; }
     .journey-icon::before, .journey-icon::after { content: ''; position: absolute; }
-    .journey-icon-qr::before { inset: 13px; border-radius: 6px; background: conic-gradient(from 90deg, #f39c12 0 25%, transparent 0 50%, #e67e22 0 75%, transparent 0); animation: journeySpin 5s linear infinite; }
-    .journey-icon-qr::after { width: 18px; height: 18px; right: 10px; bottom: 10px; border-radius: 5px; border: 3px solid #e67e22; background: #fff; }
-    .journey-icon-ai::before { width: 28px; height: 24px; left: 13px; top: 17px; border-radius: 10px; background: linear-gradient(135deg, #f39c12, #e67e22); animation: journeyFloat 2.8s ease-in-out infinite; }
-    .journey-icon-ai::after { width: 6px; height: 6px; left: 20px; top: 25px; border-radius: 50%; background: #fff; box-shadow: 12px 0 0 #fff, 6px 11px 0 -1px rgba(255,255,255,0.8); }
-    .journey-icon-voice::before { width: 18px; height: 28px; left: 18px; top: 10px; border-radius: 999px; background: linear-gradient(180deg, #f39c12, #e67e22); animation: journeyPulse 1.8s ease-in-out infinite; }
-    .journey-icon-voice::after { width: 34px; height: 20px; left: 10px; top: 25px; border: 3px solid #e67e22; border-top: 0; border-radius: 0 0 18px 18px; }
-    .journey-icon-calendar::before { width: 32px; height: 30px; left: 11px; top: 14px; border-radius: 8px; background: linear-gradient(180deg, #fff 0 28%, rgba(243,156,18,0.2) 28%); border: 2px solid #e67e22; animation: journeyLift 3s ease-in-out infinite; }
-    .journey-icon-calendar::after { width: 5px; height: 5px; left: 20px; top: 29px; border-radius: 50%; background: #f39c12; box-shadow: 9px 0 0 #e67e22, 18px 0 0 rgba(243,156,18,0.65); }
-    .journey-icon-target::before { inset: 11px; border-radius: 50%; border: 3px solid #f39c12; box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 9px #e67e22; animation: journeyPulse 2.4s ease-in-out infinite; }
-    .journey-icon-target::after { width: 8px; height: 8px; left: 23px; top: 23px; border-radius: 50%; background: #e67e22; }
-    .journey-icon-panel::before { width: 34px; height: 26px; left: 10px; top: 14px; border-radius: 8px; background: #fff; border: 2px solid #e67e22; box-shadow: inset 0 -8px 0 rgba(243,156,18,0.14); }
-    .journey-icon-panel::after { width: 6px; height: 16px; left: 18px; bottom: 15px; border-radius: 999px; background: #f39c12; box-shadow: 9px -7px 0 #e67e22, 18px -3px 0 rgba(243,156,18,0.68); animation: journeyBars 2.6s ease-in-out infinite; }
+    .journey-icon-qr::before { inset: 16px; border-radius: 6px; background: conic-gradient(from 90deg, #f39c12 0 25%, transparent 0 50%, #e67e22 0 75%, transparent 0); animation: journeySpin 5s linear infinite; }
+    .journey-icon-qr::after { width: 18px; height: 18px; right: 13px; bottom: 13px; border-radius: 5px; border: 3px solid #e67e22; background: #fff; }
+    .journey-icon-ai::before { width: 30px; height: 25px; left: 16px; top: 18px; border-radius: 10px; background: linear-gradient(135deg, #f39c12, #e67e22); animation: journeyFloat 2.8s ease-in-out infinite; }
+    .journey-icon-ai::after { width: 6px; height: 6px; left: 24px; top: 27px; border-radius: 50%; background: #fff; box-shadow: 12px 0 0 #fff, 6px 11px 0 -1px rgba(255,255,255,0.8); }
+    .journey-icon-voice::before { width: 18px; height: 28px; left: 22px; top: 12px; border-radius: 999px; background: linear-gradient(180deg, #f39c12, #e67e22); animation: journeyPulse 1.8s ease-in-out infinite; }
+    .journey-icon-voice::after { width: 34px; height: 20px; left: 14px; top: 27px; border: 3px solid #e67e22; border-top: 0; border-radius: 0 0 18px 18px; }
+    .journey-icon-calendar::before { width: 34px; height: 31px; left: 14px; top: 15px; border-radius: 8px; background: linear-gradient(180deg, #fff 0 28%, rgba(243,156,18,0.2) 28%); border: 2px solid #e67e22; animation: journeyLift 3s ease-in-out infinite; }
+    .journey-icon-calendar::after { width: 5px; height: 5px; left: 24px; top: 31px; border-radius: 50%; background: #f39c12; box-shadow: 9px 0 0 #e67e22, 18px 0 0 rgba(243,156,18,0.65); }
+    .journey-icon-target::before { inset: 14px; border-radius: 50%; border: 3px solid #f39c12; box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 9px #e67e22; animation: journeyPulse 2.4s ease-in-out infinite; }
+    .journey-icon-target::after { width: 8px; height: 8px; left: 27px; top: 27px; border-radius: 50%; background: #e67e22; }
+    .journey-icon-panel::before { width: 36px; height: 27px; left: 13px; top: 16px; border-radius: 8px; background: #fff; border: 2px solid #e67e22; box-shadow: inset 0 -8px 0 rgba(243,156,18,0.14); }
+    .journey-icon-panel::after { width: 6px; height: 16px; left: 22px; bottom: 17px; border-radius: 999px; background: #f39c12; box-shadow: 9px -7px 0 #e67e22, 18px -3px 0 rgba(243,156,18,0.68); animation: journeyBars 2.6s ease-in-out infinite; }
     @keyframes journeyFloat { 50% { transform: translateY(-4px); } }
     @keyframes journeyPulse { 50% { transform: scale(1.08); filter: drop-shadow(0 8px 12px rgba(230,126,34,0.2)); } }
     @keyframes journeySpin { to { transform: rotate(360deg); } }
@@ -87,15 +104,77 @@
     .explorer-dash-row:last-child { border-bottom: 0; }
     .explorer-bar { height: 12px; border-radius: 999px; background: rgba(255,255,255,0.1); overflow: hidden; margin-top: 0.85rem; }
     .explorer-bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f39c12, #ffd37a); animation: explorerBar 4s ease-in-out infinite; }
+    .explorer-whatsapp-glow { position: absolute; top: 58px; right: -20px; width: 68px; height: 68px; border-radius: 24px; display: grid; place-items: center; color: #fff; background: #25d366; box-shadow: 0 26px 58px rgba(37,211,102,0.42), 0 0 0 10px rgba(37,211,102,0.12); z-index: 12; animation: whatsappGlow 2.6s ease-in-out infinite; }
+    .explorer-whatsapp-glow::before { content: ''; position: absolute; inset: -12px; border-radius: 30px; background: radial-gradient(circle, rgba(37,211,102,0.38), transparent 64%); z-index: -1; filter: blur(6px); }
+    .explorer-fixed-whatsapp { position: fixed; right: 24px; bottom: 24px; width: 64px; height: 64px; display: grid; place-items: center; border: 0; border-radius: 22px; color: #fff; background: #25d366; box-shadow: 0 22px 58px rgba(37,211,102,0.48), 0 0 0 10px rgba(37,211,102,0.1); z-index: 1200; cursor: pointer; animation: whatsappGlow 2.8s ease-in-out infinite; }
+    .explorer-fixed-whatsapp::before { content: ''; position: absolute; inset: -12px; border-radius: 30px; background: radial-gradient(circle, rgba(37,211,102,0.34), transparent 66%); z-index: -1; filter: blur(6px); }
+    .explorer-fixed-whatsapp:hover { transform: translateY(-4px) scale(1.04); }
+    .explorer-totem-showcase { display: grid; grid-template-columns: 0.86fr 1.14fr; gap: 2rem; align-items: center; }
+    .explorer-totem-gallery { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 1rem; align-items: stretch; }
+    .explorer-totem-frame { position: relative; overflow: hidden; border-radius: 30px; min-height: 420px; background: #101816; box-shadow: 0 30px 90px rgba(15,24,20,0.16); }
+    .explorer-totem-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .explorer-totem-frame::after { content: attr(data-label); position: absolute; left: 18px; bottom: 18px; padding: 0.65rem 0.9rem; border-radius: 999px; color: #fff; background: rgba(0,0,0,0.42); border: 1px solid rgba(255,255,255,0.16); backdrop-filter: blur(14px); font-size: 0.78rem; font-weight: 700; }
+    .explorer-totem-mini-stack { display: grid; gap: 1rem; }
+    .explorer-totem-mini { min-height: 200px; }
+    .explorer-client-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 3rem; }
+    .explorer-client-card { overflow: hidden; border-radius: 28px; background: #fff; border: 1px solid rgba(0,0,0,0.07); box-shadow: 0 24px 70px rgba(60,72,68,0.08); }
+    .explorer-client-card img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .explorer-client-card div { padding: 1.2rem; }
+    .explorer-client-card strong { display: block; color: var(--dark); margin-bottom: 0.45rem; }
+    .explorer-client-card span { color: var(--text-body); font-size: 0.86rem; line-height: 1.5; }
+    .explorer-metrics-section { position: relative; background: #eef1ed !important; overflow: hidden; }
+    .explorer-metrics-section::before { content: ''; position: absolute; inset: 0; opacity: 0.2; background-image: radial-gradient(rgba(32,40,37,0.35) 1px, transparent 1px); background-size: 14px 14px; pointer-events: none; }
+    .explorer-management-panel { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(300px, 0.88fr); gap: 2rem; align-items: center; padding: clamp(2rem, 5vw, 4rem); border-radius: 34px; background: rgba(255,255,255,0.68); border: 1px solid rgba(255,255,255,0.82); box-shadow: 0 34px 100px rgba(60,72,68,0.12); backdrop-filter: blur(18px); }
+    .explorer-management-panel .explorer-dashboard { grid-template-columns: 0.78fr 1fr; margin-top: 2rem; }
+    .explorer-management-panel .explorer-dashboard aside, .explorer-management-panel .explorer-dashboard main { background: rgba(28,37,34,0.88); border-color: rgba(255,255,255,0.08); }
+    .explorer-management-panel .h2 { color: var(--dark) !important; }
+    .explorer-management-panel .body-large { color: var(--text-body) !important; }
+    .explorer-management-visual { position: relative; min-height: 520px; border-radius: 34px; overflow: hidden; background: linear-gradient(145deg, #dfe7df, #f7f4ed); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.72), 0 34px 90px rgba(38,49,45,0.16); }
+    .explorer-management-visual img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 6 / 4; }
+    .explorer-management-visual::after { content: none; }
+    .explorer-security-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 3rem; }
+    .explorer-security-card { padding: 1.35rem; border-radius: 26px; background: rgba(255,255,255,0.78); border: 1px solid rgba(0,0,0,0.07); box-shadow: 0 24px 70px rgba(60,72,68,0.08); }
+    .explorer-security-icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 18px; color: #fff; background: linear-gradient(135deg, #f39c12, #e67e22); margin-bottom: 1rem; box-shadow: 0 16px 34px rgba(230,126,34,0.2); }
+    .explorer-security-card h3 { color: var(--dark); font-size: 1rem; margin-bottom: 0.55rem; }
+    .explorer-security-card p { color: var(--text-body); font-size: 0.9rem; line-height: 1.55; }
+    .explorer-security-actions .btn { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 18px 44px rgba(230,126,34,0.28); }
+    .explorer-security-actions .btn:nth-child(2) { background: #d97706; border-color: #d97706; }
+    .explorer-security-actions .btn:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; transform: translateY(-3px); box-shadow: 0 24px 58px rgba(230,126,34,0.38); }
+    .explorer-security-actions .btn:nth-child(2):hover { background: #b85f00; border-color: #b85f00; }
+    .explorer-testimonials-section { position: relative; overflow: hidden; background: #f6f4ee; }
+    .explorer-testimonials-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 12% 20%, rgba(243,156,18,0.16), transparent 28%), radial-gradient(circle at 88% 0%, rgba(230,126,34,0.12), transparent 26%); pointer-events: none; }
+    .explorer-testimonials-section .container { position: relative; z-index: 1; }
+    .explorer-testimonials-swiper { overflow: hidden; padding: 1rem 0 3.25rem; }
+    .explorer-testimonials-swiper .swiper-slide { width: 315px; height: auto; }
+    .explorer-testimonial-card { min-height: 330px; display: flex; flex-direction: column; justify-content: space-between; padding: 1.05rem; border-radius: 26px; background: rgba(255,255,255,0.78); border: 1px solid rgba(255,255,255,0.84); box-shadow: 0 24px 68px rgba(60,72,68,0.09); backdrop-filter: blur(18px); }
+    .explorer-testimonial-card img { width: 100%; aspect-ratio: 4 / 3; height: auto; object-fit: cover; display: block; border-radius: 20px; margin-bottom: 0.9rem; }
+    .explorer-testimonial-card img.testimonial-marcos { object-position: center 18%; }
+    .explorer-testimonial-stars { color: #f39c12; letter-spacing: 0.08em; font-size: 0.92rem; margin-bottom: 0.85rem; }
+    .explorer-testimonial-card blockquote { color: var(--dark); font-weight: 650; line-height: 1.42; letter-spacing: -0.02em; margin: 0 0 1rem; font-size: 0.94rem; }
+    .explorer-testimonial-card strong { display: block; color: var(--dark); }
+    .explorer-testimonial-card span { display: block; color: var(--text-body); font-size: 0.84rem; line-height: 1.45; margin-top: 0.18rem; }
+    .explorer-testimonials-swiper .swiper-pagination-bullet { background: rgba(32,40,37,0.28); opacity: 1; }
+    .explorer-testimonials-swiper .swiper-pagination-bullet-active { background: var(--primary); }
+    .pdf-modal-overlay { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(13,18,25,0.58); backdrop-filter: blur(12px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.28s ease, visibility 0.28s ease; }
+    .pdf-modal-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
+    .pdf-modal-card { width: min(1040px, calc(100vw - 2rem)); height: min(780px, calc(100dvh - 2rem)); display: grid; grid-template-rows: auto 1fr; overflow: hidden; border-radius: 28px; background: #fff; box-shadow: 0 36px 110px rgba(0,0,0,0.32); transform: translateY(26px) scale(0.96); transition: transform 0.34s cubic-bezier(0.22,1,0.36,1); }
+    .pdf-modal-overlay.active .pdf-modal-card { transform: translateY(0) scale(1); }
+    .pdf-modal-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .pdf-modal-header strong { color: var(--dark); }
+    .pdf-modal-actions { display: flex; gap: 0.65rem; align-items: center; }
+    .pdf-modal-close { width: 42px; height: 42px; border: 0; border-radius: 14px; background: #f1f3f2; color: var(--dark); cursor: pointer; font-size: 1.25rem; }
+    .pdf-modal-frame { width: 100%; height: 100%; border: 0; background: #f6f6f2; }
+    @keyframes whatsappGlow { 0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 26px 58px rgba(37,211,102,0.42), 0 0 0 10px rgba(37,211,102,0.12); } 50% { transform: translateY(-6px) scale(1.04); box-shadow: 0 34px 78px rgba(37,211,102,0.56), 0 0 0 15px rgba(37,211,102,0.08); } }
     @keyframes explorerGlow { 50% { opacity: 0.55; transform: translateY(16px) scale(1.04); } }
     @keyframes explorerMetricFloat { 50% { transform: translateY(-12px) rotate(1deg); } }
     @keyframes explorerMouseInteract { 0%, 100% { transform: translate(-28px, 26px) rotate(-12deg); } 24% { transform: translate(-92px, -155px) rotate(-8deg); } 30% { transform: translate(-92px, -155px) rotate(-8deg) scale(0.93); } 38% { transform: translate(-72px, -74px) rotate(-10deg); } 62% { transform: translate(-118px, -232px) rotate(-7deg); } 68% { transform: translate(-118px, -232px) rotate(-7deg) scale(0.93); } }
     @keyframes explorerMouseWheel { 25%, 65% { transform: translate(-50%, 9px); opacity: 0.45; } }
     @keyframes explorerMousePulse { 28%, 66% { opacity: 0.9; transform: scale(1); } 39%, 78% { opacity: 0; transform: scale(1.55); } }
     @keyframes explorerBar { 0%, 100% { transform: scaleX(0.72); transform-origin: left; } 50% { transform: scaleX(1); transform-origin: left; } }
-    @media (max-width: 1180px) { .explorer-journey-row { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (max-width: 1024px) { .explorer-modern-grid, .explorer-dashboard { grid-template-columns: 1fr; } .explorer-flow { grid-template-columns: repeat(2, 1fr); } .explorer-phone-metric { right: 0; } }
-    @media (max-width: 768px) { .explorer-hero-kpis, .explorer-flow, .explorer-journey-row { grid-template-columns: 1fr; } .explorer-node { position: relative; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; max-width: none; } .explorer-orbit-card { min-height: auto; display: grid; gap: 1rem; } .explorer-orbit-card::before, .explorer-orbit-card::after, .explorer-orbit-center { display: none; } .explorer-phone-metric, .explorer-mouse { display: none; } }
+    @media (max-width: 1180px) { .explorer-journey-row, .explorer-client-grid, .explorer-security-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 1024px) { .explorer-modern-grid, .explorer-dashboard, .explorer-totem-showcase, .explorer-management-panel { grid-template-columns: 1fr; } .explorer-flow { grid-template-columns: repeat(2, 1fr); } .explorer-phone-metric { right: 0; } }
+    @media (max-width: 768px) { #inicio { padding-top: 104px !important; } .explorer-flow, .explorer-journey-row, .explorer-client-grid, .explorer-security-grid, .explorer-totem-gallery { grid-template-columns: 1fr; } .explorer-hero-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.45rem; margin: 1.35rem 0 1rem; } .explorer-kpi { padding: 0.7rem 0.45rem; border-radius: 15px; } .explorer-kpi strong { font-size: 1.05rem; } .explorer-kpi span { font-size: 0.62rem; line-height: 1.22; } .explorer-hero-cta { width: 100%; } .explorer-node { position: relative; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; max-width: none; } .explorer-orbit-card { min-height: auto; display: grid; gap: 1rem; } .explorer-orbit-card::before, .explorer-orbit-card::after, .explorer-orbit-center { display: none; } .explorer-phone-metric, .explorer-mouse { display: none; } .explorer-whatsapp-glow { width: 54px; height: 54px; top: 46px; right: 0; border-radius: 18px; } .explorer-management-panel { padding: 1.1rem; border-radius: 28px; } .explorer-management-panel .explorer-dashboard { grid-template-columns: 1fr; } .explorer-management-visual, .explorer-totem-frame { min-height: 320px; } .explorer-journey-card { min-height: auto; padding: 1rem !important; grid-template-columns: 56px 1fr; gap: 0.75rem 0.85rem; } .explorer-journey-card .journey-icon { transform: scale(0.9); transform-origin: center; } .explorer-journey-card .text-small { line-height: 1.42; } .explorer-security-actions { width: 100%; } .explorer-security-actions .btn { width: 100%; flex: 1 0 100%; } .explorer-fixed-whatsapp { right: max(14px, env(safe-area-inset-right)); bottom: max(14px, env(safe-area-inset-bottom)); width: 56px; height: 56px; border-radius: 19px; box-shadow: 0 16px 40px rgba(37,211,102,0.42); } .explorer-fixed-whatsapp::before { display: none; } .pdf-modal-overlay { padding: 0.75rem; align-items: flex-end; } .pdf-modal-card { width: 100%; height: min(84dvh, 720px); border-radius: 24px 24px 0 0; } .pdf-modal-header { align-items: flex-start; flex-direction: column; } .pdf-modal-actions { width: 100%; } .pdf-modal-actions .btn { flex: 1; } }
+    @media (max-width: 430px) { .container { max-width: 100%; } .hero-split { overflow: visible; } .explorer-light-demo { width: min(292px, 84vw); max-width: calc(100vw - 3rem); } .explorer-dashboard main > div:first-child { grid-template-columns: 1fr !important; } .explorer-testimonials-swiper .swiper-slide { width: min(286px, 78vw); } .explorer-testimonial-card { min-height: 318px; padding: 0.95rem; } }
   </style>
 </head>
 <body style="--primary: #f39c12; --primary-hover: #e67e22; --primary-light: rgba(243, 156, 18, 0.1);">
@@ -128,25 +207,23 @@
   <main>
     <!-- HERO -->
     <section id="inicio" class="section section-light bg-grid-pattern" style="padding-top: 150px;">
-      <div class="container">
-        <div class="text-micro text-primary" style="margin-bottom: 1rem; justify-self: center;">Ê-Bot Explorer • inteligência turística para cidades</div>
-      </div>
       <div class="container grid grid-2 items-center hero-split">
         <div class="reveal reveal-left">
           <span class="badge" style="background: var(--primary-light); color: var(--primary);">Turismo e Cidades</span>
-          <h1 class="h1">O Guia Turístico Digital da sua Cidade</h1>
-          <p class="body-large" style="margin: 2rem 0;">O Ê-Bot Explorer transforma a experiência do visitante integrando WhatsApp via QR Code e Totens Conversacionais interativos, conectando o turista à cultura, roteiros e negócios locais em tempo real.</p>
+          <h1 class="h1">Como atender turistas 24 horas e transformar cada pergunta em dados para a cidade? Com o Ê-Bot Explorer.</h1>
+          <p class="body-large" style="margin: 2rem 0;">O que o visitante procura ao chegar em uma praça, hotel ou evento? Ele quer respostas rápidas sobre roteiros, cultura, gastronomia e serviços. O Ê-Bot Explorer responde por WhatsApp, QR Code e totens conversacionais, enquanto a gestão acompanha tudo em tempo real.</p>
           <div class="explorer-hero-kpis">
             <div class="explorer-kpi"><strong>24/7</strong><span>atendimento ao turista sem fila e sem balcão fechado</span></div>
             <div class="explorer-kpi"><strong>3 canais</strong><span>QR Code, WhatsApp e totem físico integrados</span></div>
             <div class="explorer-kpi"><strong>1 painel</strong><span>dados de interesse, rotas e consumo local</span></div>
           </div>
-          <button class="trigger-wa-modal btn btn-primary">Falar com Consultor</button>
+          <button class="trigger-wa-modal btn btn-primary explorer-hero-cta">Falar com Consultor</button>
         </div>
         <div class="reveal reveal-right" style="display: flex; justify-content: center; gap: 1rem;">
-          <div class="explorer-demo-container explorer-light-demo" aria-label="Chat agent interface mockup">
-            <div class="explorer-phone-glow"></div>
-            <div class="explorer-phone" aria-hidden="true">
+            <div class="explorer-demo-container explorer-light-demo" aria-label="Chat agent interface mockup">
+              <div class="explorer-phone-glow"></div>
+              <div class="explorer-whatsapp-glow" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.28 14.3c-.22.61-1.28 1.15-1.78 1.22-.43.06-1.02.13-3.23-.79-2.66-1.11-4.38-3.83-4.52-4.01-.13-.19-1.08-1.44-1.08-2.75 0-1.31.68-1.95.92-2.22.24-.26.52-.33.69-.33.17 0 .34 0 .49.01.16.01.37-.06.57.43.21.5.73 1.77.79 1.9.06.13.1.28.01.47-.08.19-.13.31-.26.46-.13.15-.28.33-.39.46-.13.14-.27.29-.12.56.15.26.68 1.13 1.46 1.83.99.9 1.84 1.18 2.1 1.31.26.13.41.11.56-.06.15-.17.65-.75.82-1.01.17-.26.34-.22.58-.13.24.09 1.53.72 1.79.85.26.13.43.19.5.3.06.11.06.64-.16 1.25z"/></svg></div>
+              <div class="explorer-phone" aria-hidden="true">
               <div class="explorer-phone-screen">
                 <div class="explorer-status-bar">
                   <span>09:41</span>
@@ -186,7 +263,7 @@
                     <div class="explorer-bubble explorer-user chat-step">Reservar mesa às 19h.</div>
                     <div class="explorer-typing-bubble chat-step"><span></span><span></span><span></span></div>
                     <div class="explorer-bubble explorer-bot chat-step">Reserva confirmada. Link enviado.</div>
-                    <div class="explorer-bubble explorer-bot chat-step">Painel atualizado com a reserva.</div>
+                    <div class="explorer-bubble explorer-user chat-step">Perfeito, obrigado! 😊</div>
                   </div>
                 </div>
                 <div class="explorer-input-bar">
@@ -201,7 +278,7 @@
           </div>
           <style>
             .explorer-light-demo {
-              width: 348px;
+              width: min(362px, 100%);
               aspect-ratio: 9 / 16;
               height: auto;
               position: relative;
@@ -238,7 +315,8 @@
               overflow: visible;
               background: linear-gradient(145deg, #0d1014, #242a31 42%, #07090c);
               box-shadow: 0 60px 115px rgba(20, 36, 52, 0.28), 0 24px 42px rgba(13, 18, 25, 0.2), inset 0 0 0 1px rgba(255,255,255,0.16), inset 0 -20px 34px rgba(0,0,0,0.38);
-              transform: rotateX(3deg) rotateY(-10deg) rotateZ(-2deg);
+              aspect-ratio: 9 / 16;
+              transform: rotateX(2deg) rotateY(-7deg) rotateZ(-1.5deg);
               transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 650ms cubic-bezier(0.22, 1, 0.36, 1);
             }
             .explorer-light-demo:hover .explorer-phone {
@@ -354,17 +432,17 @@
               position: absolute;
               left: 8px;
               right: 8px;
-              top: 0;
+              top: 42px;
               display: flex;
               flex-direction: column;
               gap: 10px;
-              animation: explorerChatScroll 26s cubic-bezier(0.58, 0, 0.18, 1) infinite;
+              animation: explorerChatScrollDesktop 32s cubic-bezier(0.58, 0, 0.18, 1) infinite;
               will-change: transform, opacity;
             }
             .explorer-chat-track > .chat-step {
               opacity: 0;
               transform: translate3d(0, 18px, 0) scale(0.98);
-              animation-duration: 26s;
+              animation-duration: 32s;
               animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
               animation-iteration-count: infinite;
               animation-fill-mode: both;
@@ -488,8 +566,8 @@
               display: block;
               box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
             }
-            .restaurant-photo-1 { background: linear-gradient(rgba(230,126,34,0.08), rgba(230,126,34,0.08)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=160&q=70') center/cover; }
-            .restaurant-photo-2 { background: linear-gradient(rgba(230,126,34,0.08), rgba(230,126,34,0.08)), url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=160&q=70') center/cover; }
+            .restaurant-photo-1 { background: linear-gradient(rgba(230,126,34,0.08), rgba(230,126,34,0.08)), url('./assets/images/sections/hero/restaurante-regional.webp') center/cover; }
+            .restaurant-photo-2 { background: linear-gradient(rgba(230,126,34,0.08), rgba(230,126,34,0.08)), url('./assets/images/sections/hero/cafe-central.webp') center/cover; }
             .explorer-restaurant-option strong { display: block; color: #182235; font-size: 0.74rem; line-height: 1.15; }
             .explorer-restaurant-option small { display: block; color: #8b6f4e; font-size: 0.63rem; margin-top: 3px; }
             .explorer-typing-bubble {
@@ -570,27 +648,27 @@
               opacity: 0;
               animation: explorerLightClick 7s ease-out infinite;
             }
-            @keyframes explorerChatScroll {
-              0%, 18% { transform: translate3d(0, 0, 0); opacity: 1; }
-              28% { transform: translate3d(0, -44px, 0); }
-              38% { transform: translate3d(0, -102px, 0); }
-              50% { transform: translate3d(0, -170px, 0); }
-              62% { transform: translate3d(0, -250px, 0); }
-              76% { transform: translate3d(0, -338px, 0); }
-              88%, 94% { transform: translate3d(0, -398px, 0); opacity: 1; }
-              100% { transform: translate3d(0, -398px, 0); opacity: 0; }
+            @keyframes explorerChatScrollDesktop {
+              0%, 14% { transform: translate3d(0, 0, 0); opacity: 1; }
+              24% { transform: translate3d(0, -32px, 0); }
+              34% { transform: translate3d(0, -78px, 0); }
+              46% { transform: translate3d(0, -138px, 0); }
+              58% { transform: translate3d(0, -206px, 0); }
+              70% { transform: translate3d(0, -278px, 0); }
+              82%, 98.5% { transform: translate3d(0, -430px, 0); opacity: 1; }
+              100% { transform: translate3d(0, -430px, 0); opacity: 0; }
             }
-            @keyframes explorerStep1 { 0%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
-            @keyframes explorerStep2 { 0%, 7% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 11%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
-            @keyframes explorerStep3 { 0%, 15% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 19%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
-            @keyframes explorerStep4 { 0%, 24% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 28%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
-            @keyframes explorerStep5 { 0%, 35% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 39%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
-            @keyframes explorerStep6 { 0%, 43% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 47%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
-            @keyframes explorerStep7 { 0%, 54% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 58%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
-            @keyframes explorerStep8 { 0%, 68% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 72%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
-            @keyframes explorerStep9 { 0%, 74%, 83%, 100% { opacity: 0; transform: translate3d(0, 8px, 0) scale(0.96); } 78%, 80% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } }
-            @keyframes explorerStep10 { 0%, 81% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 85%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
-            @keyframes explorerStep11 { 0%, 88% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 92%, 94% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
+            @keyframes explorerStep1 { 0%, 98% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
+            @keyframes explorerStep2 { 0%, 7% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 11%, 98% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
+            @keyframes explorerStep3 { 0%, 15% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 19%, 98% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
+            @keyframes explorerStep4 { 0%, 23% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 27%, 98% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
+            @keyframes explorerStep5 { 0%, 34% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 38%, 98% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
+            @keyframes explorerStep6 { 0%, 42% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 46%, 98% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
+            @keyframes explorerStep7 { 0%, 53% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 57%, 98% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
+            @keyframes explorerStep8 { 0%, 66% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 70%, 98% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -8px, 0) scale(0.98); } }
+            @keyframes explorerStep9 { 0%, 72%, 81%, 100% { opacity: 0; transform: translate3d(0, -24px, 0) scale(0.88); margin-bottom: -48px; max-height: 0; padding-top: 0; padding-bottom: 0; border-width: 0; overflow: hidden; } 76%, 79% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); margin-bottom: 0; max-height: 42px; padding-top: 13px; padding-bottom: 13px; border-width: 1px; } }
+            @keyframes explorerStep10 { 0%, 78% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 82%, 98% { opacity: 1; transform: translate3d(0, -10px, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -18px, 0) scale(0.98); } }
+            @keyframes explorerStep11 { 0%, 81% { opacity: 0; transform: translate3d(0, 18px, 0) scale(0.98); } 85%, 98.5% { opacity: 1; transform: translate3d(0, -10px, 0) scale(1); } 100% { opacity: 0; transform: translate3d(0, -18px, 0) scale(0.98); } }
             @keyframes explorerTypingLight {
               0%, 70%, 100% { transform: translateY(0); opacity: 0.38; }
               35% { transform: translateY(-5px); opacity: 1; }
@@ -611,10 +689,71 @@
               38%, 84% { opacity: 0; transform: scale(1.55); }
             }
             @media (max-width: 768px) {
-              .explorer-light-demo { width: 300px; aspect-ratio: 9 / 16; }
-              .explorer-light-demo .explorer-phone { transform: rotateX(2deg) rotateY(-5deg) rotateZ(-1deg); }
-              .explorer-light-demo:hover .explorer-phone { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-              .explorer-light-demo .explorer-mouse { display: none; }
+              .explorer-light-demo { width: min(306px, 86vw); aspect-ratio: 9 / 17.4; }
+              .explorer-light-demo .explorer-phone { transform: none; aspect-ratio: 9 / 17.4; }
+              .explorer-light-demo:hover .explorer-phone { transform: none; }
+              .explorer-light-demo .explorer-mouse {
+                display: block;
+                width: 38px;
+                height: 54px;
+                right: -8px;
+                bottom: 96px;
+                border-width: 2px;
+                z-index: 14;
+                box-shadow: 14px 22px 36px rgba(21, 32, 47, 0.22);
+                animation: explorerLightMouseMobile 7s cubic-bezier(0.55, 0, 0.22, 1) infinite;
+              }
+              .explorer-light-demo .explorer-mouse::before {
+                top: 8px;
+                height: 12px;
+              }
+              .explorer-light-demo .explorer-mouse::after {
+                inset: -9px;
+              }
+              .explorer-chat-window { margin-top: 9px; padding-bottom: 22px; mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 94%, transparent 100%); }
+              .explorer-chat-track { top: 22px; gap: 8px; animation-name: explorerChatScrollMobile; }
+              .explorer-chat-track > .chat-step { animation-duration: 30s; }
+              .explorer-bubble, .explorer-card-bubble, .explorer-restaurant-options, .explorer-typing-bubble { font-size: 0.7rem; line-height: 1.28; padding: 9px 10px; max-width: 82%; }
+              .explorer-bubble { min-height: 32px; }
+              .explorer-card-bubble { width: 190px; }
+              .explorer-card-bubble > span { height: 54px; }
+              .explorer-restaurant-options { width: 202px; gap: 6px; }
+              .explorer-restaurant-option { grid-template-columns: 38px 1fr; gap: 7px; padding: 6px; }
+              .restaurant-photo { width: 38px; height: 32px; }
+              .explorer-input-bar { height: 58px; margin: 7px 10px 11px; border-radius: 21px; box-shadow: 0 -10px 26px rgba(56,74,96,0.12), inset 0 1px rgba(255,255,255,0.84); }
+            }
+            @keyframes explorerChatScrollMobile {
+              0%, 12% { transform: translate3d(0, 0, 0); opacity: 1; }
+              22% { transform: translate3d(0, -36px, 0); }
+              32% { transform: translate3d(0, -84px, 0); }
+              44% { transform: translate3d(0, -142px, 0); }
+              56% { transform: translate3d(0, -206px, 0); }
+              68% { transform: translate3d(0, -276px, 0); }
+              80%, 98% { transform: translate3d(0, -438px, 0); opacity: 1; }
+              100% { transform: translate3d(0, -438px, 0); opacity: 0; }
+            }
+            @keyframes explorerLightMouseMobile {
+              0%, 100% { transform: translate(-4px, 14px) rotate(-8deg); }
+              22% { transform: translate(-58px, -104px) rotate(-6deg); }
+              28% { transform: translate(-58px, -104px) rotate(-6deg) scale(0.94); }
+              45% { transform: translate(-38px, -38px) rotate(-7deg); }
+              66% { transform: translate(-78px, -186px) rotate(-5deg); }
+              72% { transform: translate(-78px, -186px) rotate(-5deg) scale(0.94); }
+            }
+            @media (min-width: 769px) and (max-width: 1180px) {
+              .explorer-chat-window { padding-bottom: 18px; mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 93%, transparent 100%); }
+              .explorer-chat-track { top: 30px; animation-name: explorerChatScrollTablet; }
+              .explorer-chat-track > .chat-step { animation-duration: 32s; }
+            }
+            @keyframes explorerChatScrollTablet {
+              0%, 13% { transform: translate3d(0, 0, 0); opacity: 1; }
+              23% { transform: translate3d(0, -40px, 0); }
+              34% { transform: translate3d(0, -92px, 0); }
+              46% { transform: translate3d(0, -158px, 0); }
+              58% { transform: translate3d(0, -232px, 0); }
+              70% { transform: translate3d(0, -310px, 0); }
+              82%, 98.5% { transform: translate3d(0, -470px, 0); opacity: 1; }
+              100% { transform: translate3d(0, -470px, 0); opacity: 0; }
             }
           </style>
         </div>
@@ -622,7 +761,7 @@
     </section>
 
     <!-- BENTO GRID -->
-    <section id="solucao" class="section section-gray">
+    <section id="solucao" class="section explorer-scenic-section explorer-journey-bg">
       <div class="container reveal">
         <h2 class="h2 text-center" style="margin-bottom: 1rem;">Jornada Completa do Turista</h2>
         <p class="body-large text-center" style="margin-bottom: 4rem;">Do acesso por QR Code nas praças até a reserva nos restaurantes.</p>
@@ -663,8 +802,85 @@
       </div>
     </section>
 
+    <!-- TOTEM SHOWCASE -->
+    <section class="section section-gray" id="totens">
+      <div class="container reveal">
+        <div class="explorer-totem-showcase">
+          <div>
+            <div class="explorer-section-eyebrow">Totem conversacional</div>
+            <h2 class="h2" style="margin-bottom: 1rem;">Mais presença física para o turismo digital.</h2>
+            <p class="body-large" style="margin-bottom: 2rem;">O totem leva a mesma inteligência do WhatsApp para pontos de grande circulação, criando atendimento acessível em rodoviárias, centros culturais, praças, secretarias, eventos e feiras.</p>
+            <div class="explorer-stack">
+              <div class="explorer-impact-card"><strong>voz + toque</strong><span>Interação por conversa para orientar visitantes, idosos e turistas sem familiaridade com aplicativos.</span></div>
+              <div class="explorer-impact-card"><strong>presença local</strong><span>Um ponto físico de informação turística com identidade da cidade e base atualizada pela gestão.</span></div>
+            </div>
+          </div>
+          <div class="explorer-totem-gallery">
+            <figure class="explorer-totem-frame" data-label="Totem em ponto turístico"><img src="./assets/images/totem_uso.webp" alt="Totem Ê-Bot Explorer em uso"></figure>
+            <div class="explorer-totem-mini-stack">
+              <figure class="explorer-totem-frame explorer-totem-mini" data-label="Atendimento em eventos"><img src="./assets/images/sections/totem/evento-cultural.webp" alt="Evento cultural com visitantes"></figure>
+              <figure class="explorer-totem-frame explorer-totem-mini" data-label="Apoio em centros culturais"><img src="./assets/images/sections/totem/centro-cultural.webp" alt="Visitantes em centro cultural"></figure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLIENTS AND PARTNERS -->
+    <section class="section section-light bg-grid-pattern" id="clientes">
+      <div class="container reveal">
+        <div style="max-width: 760px; margin: 0 auto; text-align: center;">
+          <div class="explorer-section-eyebrow">Clientes e parceiros</div>
+          <h2 class="h2" style="margin-bottom: 1rem;">Feito para quem promove, recebe e movimenta o turismo local.</h2>
+          <p class="body-large">O Explorer conecta gestão pública, cultura, hotelaria, comércio e operadores turísticos em uma experiência única para o visitante.</p>
+        </div>
+        <div class="explorer-client-grid">
+          <article class="explorer-client-card"><img src="./assets/images/sections/clientes/prefeituras-secretarias.webp" alt="Equipe de gestão pública em reunião"><div><strong>Prefeituras e secretarias</strong><span>Turismo, cultura, desenvolvimento econômico e comunicação pública com dados centralizados.</span></div></article>
+          <article class="explorer-client-card"><img src="./assets/images/sections/clientes/instituicoes-culturais.webp" alt="Evento cultural com público"><div><strong>Instituições culturais</strong><span>Museus, centros culturais, feiras, festivais e calendários oficiais com atendimento contextual.</span></div></article>
+          <article class="explorer-client-card"><img src="./assets/images/sections/clientes/hoteis-receptivos.webp" alt="Hotelaria e recepção turística"><div><strong>Hotéis e receptivos</strong><span>QR Codes em quartos, recepções e materiais para orientar hóspedes sem instalar aplicativo.</span></div></article>
+          <article class="explorer-client-card"><img src="./assets/images/sections/clientes/comercio-experiencias.webp" alt="Restaurante com clientes"><div><strong>Comércio e experiências</strong><span>Restaurantes, cafeterias, guias, agências e negócios locais indicados no momento certo.</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section explorer-testimonials-section" id="depoimentos">
+      <div class="container reveal">
+        <div style="max-width: 760px; margin-bottom: 2.5rem;">
+          <div class="explorer-section-eyebrow">Depoimentos</div>
+          <h2 class="h2" style="margin-bottom: 1rem;">Quem vive o turismo na ponta precisa de respostas rápidas e dados confiáveis.</h2>
+          <p class="body-large">Exemplos de como gestores públicos, cultura, hotelaria e comércio local podem se beneficiar com uma operação turística conversacional.</p>
+        </div>
+        <div class="swiper explorer-testimonials-swiper">
+          <div class="swiper-wrapper">
+            <article class="swiper-slide explorer-testimonial-card">
+              <div><img class="testimonial-marcos" src="./assets/images/sections/testimonials/gestor-publico.webp" alt="Gestor público em reunião"><div class="explorer-testimonial-stars">★★★★★</div><blockquote>“O atendimento saiu do balcão e chegou aos pontos de fluxo. A equipe passou a entender as dúvidas reais dos visitantes antes de planejar campanhas.”</blockquote></div>
+              <div><strong>Marcos A. Ribeiro</strong><span>Secretaria municipal de turismo</span></div>
+            </article>
+            <article class="swiper-slide explorer-testimonial-card">
+              <div><img src="./assets/images/sections/testimonials/centro-cultural-visitantes.webp" alt="Centro cultural com visitantes"><div class="explorer-testimonial-stars">★★★★★</div><blockquote>“A agenda cultural ficou mais fácil de consultar. O visitante pergunta no WhatsApp e chega ao evento com orientação de horário, endereço e programação.”</blockquote></div>
+              <div><strong>Helena Duarte</strong><span>Coordenação de instituição cultural</span></div>
+            </article>
+            <article class="swiper-slide explorer-testimonial-card">
+              <div><img src="./assets/images/sections/testimonials/hotelaria.webp" alt="Recepção de hotel"><div class="explorer-testimonial-stars">★★★★★</div><blockquote>“Os QR Codes reduzem perguntas repetidas na recepção e ajudam hóspedes a montar roteiros próximos com restaurantes, praças e eventos.”</blockquote></div>
+              <div><strong>Patrícia Lemos</strong><span>Hotelaria e receptivo local</span></div>
+            </article>
+            <article class="swiper-slide explorer-testimonial-card">
+              <div><img src="./assets/images/sections/testimonials/restaurante.webp" alt="Restaurante com mesas preparadas"><div class="explorer-testimonial-stars">★★★★★</div><blockquote>“Quando o turista procura onde comer depois do passeio, nossa oferta aparece no contexto certo. Isso traz movimento em horários antes mais fracos.”</blockquote></div>
+              <div><strong>Renato Salles</strong><span>Restaurante parceiro</span></div>
+            </article>
+            <article class="swiper-slide explorer-testimonial-card">
+              <div><img src="./assets/images/sections/testimonials/empresa-turistica.webp" alt="Equipe corporativa em planejamento"><div class="explorer-testimonial-stars">★★★★★</div><blockquote>“A visão por dados ajuda a justificar investimentos, ajustar comunicação e mostrar resultado para parceiros públicos e privados.”</blockquote></div>
+              <div><strong>Camila Nogueira</strong><span>Empresa de experiências turísticas</span></div>
+            </article>
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+    </section>
+
     <!-- IMPLEMENTATION -->
-    <section id="implantacao" class="section section-gray">
+    <section id="implantacao" class="section explorer-scenic-section explorer-implant-bg">
       <div class="container reveal">
         <div style="display: flex; justify-content: space-between; align-items: end; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem;">
           <div style="max-width: 680px;">
@@ -683,39 +899,62 @@
     </section>
 
     <!-- METRICS -->
-    <section id="metricas" class="section section-dark" style="background: #202825;">
+    <section id="metricas" class="section explorer-metrics-section">
       <div class="container reveal">
-        <div class="explorer-dark-panel">
-          <div style="max-width: 760px;">
-            <div class="explorer-section-eyebrow" style="color: #ffd37a;">Gestão em tempo real</div>
-            <h2 class="h2" style="color: white; margin-bottom: 1rem;">O turismo deixa de ser invisível e vira informação acionável.</h2>
-            <p class="body-large" style="color: rgba(255,255,255,0.74);">Cada conversa ajuda a revelar o que o visitante procura, onde ele está, quais experiências geram interesse e quais parceiros recebem mais intenção de visita.</p>
+        <div class="explorer-management-panel">
+          <div>
+            <div class="explorer-section-eyebrow">Gestão em tempo real</div>
+            <h2 class="h2" style="margin-bottom: 1rem;">O turismo deixa de ser invisível e vira informação acionável.</h2>
+            <p class="body-large">Cada conversa ajuda a revelar o que o visitante procura, onde ele está, quais experiências geram interesse e quais parceiros recebem mais intenção de visita.</p>
+            <div class="explorer-dashboard">
+              <aside>
+                <div style="color: rgba(255,255,255,0.45); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1rem;">Interesses hoje</div>
+                <div class="explorer-dash-row"><span>Gastronomia regional</span><strong>31%</strong></div>
+                <div class="explorer-dash-row"><span>Eventos noturnos</span><strong>24%</strong></div>
+                <div class="explorer-dash-row"><span>Roteiros a pé</span><strong>19%</strong></div>
+                <div class="explorer-dash-row"><span>Hospedagem</span><strong>14%</strong></div>
+              </aside>
+              <main>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                  <div><strong style="display:block; color:white; font-size:2rem; letter-spacing:-0.05em;">1.248</strong><span style="color:rgba(255,255,255,0.55); font-size:0.8rem;">conversas</span></div>
+                  <div><strong style="display:block; color:white; font-size:2rem; letter-spacing:-0.05em;">412</strong><span style="color:rgba(255,255,255,0.55); font-size:0.8rem;">rotas criadas</span></div>
+                  <div><strong style="display:block; color:white; font-size:2rem; letter-spacing:-0.05em;">87</strong><span style="color:rgba(255,255,255,0.55); font-size:0.8rem;">indicações comerciais</span></div>
+                </div>
+                <div style="color: rgba(255,255,255,0.62); font-size: 0.9rem; margin-top: 1rem;">Fluxo por período</div>
+                <div class="explorer-bar"><span style="width: 92%;"></span></div>
+                <div class="explorer-bar"><span style="width: 64%; animation-delay: .25s;"></span></div>
+                <div class="explorer-bar"><span style="width: 78%; animation-delay: .5s;"></span></div>
+                <div style="margin-top: 2rem; padding: 1rem; border-radius: 18px; background: rgba(243,156,18,0.14); color: #ffe1a3;">Sinal detectado: turistas perguntando por programação depois das 18h. Reforce eventos noturnos e parceiros gastronômicos.</div>
+              </main>
+            </div>
           </div>
-          <div class="explorer-dashboard">
-            <aside>
-              <div style="color: rgba(255,255,255,0.45); font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 1rem;">Interesses hoje</div>
-              <div class="explorer-dash-row"><span>Gastronomia regional</span><strong>31%</strong></div>
-              <div class="explorer-dash-row"><span>Eventos noturnos</span><strong>24%</strong></div>
-              <div class="explorer-dash-row"><span>Roteiros a pé</span><strong>19%</strong></div>
-              <div class="explorer-dash-row"><span>Hospedagem</span><strong>14%</strong></div>
-            </aside>
-            <main>
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
-                <div><strong style="display:block; color:white; font-size:2rem; letter-spacing:-0.05em;">1.248</strong><span style="color:rgba(255,255,255,0.55); font-size:0.8rem;">conversas</span></div>
-                <div><strong style="display:block; color:white; font-size:2rem; letter-spacing:-0.05em;">412</strong><span style="color:rgba(255,255,255,0.55); font-size:0.8rem;">rotas criadas</span></div>
-                <div><strong style="display:block; color:white; font-size:2rem; letter-spacing:-0.05em;">87</strong><span style="color:rgba(255,255,255,0.55); font-size:0.8rem;">indicações comerciais</span></div>
-              </div>
-              <div style="color: rgba(255,255,255,0.62); font-size: 0.9rem; margin-top: 1rem;">Fluxo por período</div>
-              <div class="explorer-bar"><span style="width: 92%;"></span></div>
-              <div class="explorer-bar"><span style="width: 64%; animation-delay: .25s;"></span></div>
-              <div class="explorer-bar"><span style="width: 78%; animation-delay: .5s;"></span></div>
-              <div style="margin-top: 2rem; padding: 1rem; border-radius: 18px; background: rgba(243,156,18,0.14); color: #ffe1a3;">Sinal detectado: turistas perguntando por programação depois das 18h. Reforce eventos noturnos e parceiros gastronômicos.</div>
-            </main>
+          <div class="explorer-management-visual">
+            <img src="./assets/images/totem_rua.webp" alt="Totem Ê-Bot Explorer em atendimento turístico na rua">
           </div>
         </div>
       </div>
     </section>
   
+    <!-- SECURITY -->
+    <section id="seguranca" class="section section-light bg-grid-pattern">
+      <div class="container reveal">
+        <div style="max-width: 820px; margin: 0 auto; text-align: center;">
+          <div class="explorer-section-eyebrow">Segurança de dados e operação</div>
+          <h2 class="h2" style="margin-bottom: 1rem;">Atendimento inteligente com governança, privacidade e rotina operacional clara.</h2>
+          <p class="body-large" style="margin-bottom: 2rem;">O Ê-Bot Explorer foi pensado para uso público e corporativo, com documentos de privacidade, boas práticas de LGPD e operação acompanhada para manter a base de informações confiável.</p>
+          <div class="explorer-security-actions" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button class="btn btn-outline open-pdf-modal" data-pdf-title="LGPD Ê-Bot Explorer" data-pdf-src="./assets/pdf/ebot_LGPD.pdf">Ler a LGPD</button>
+            <button class="btn btn-outline open-pdf-modal" data-pdf-title="Política de Privacidade Ê-Bot Explorer" data-pdf-src="./assets/pdf/ebot_politica_privacidade.pdf">Ler política de privacidade</button>
+          </div>
+        </div>
+        <div class="explorer-security-grid">
+          <article class="explorer-security-card"><div class="explorer-security-icon"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Privacidade documentada</h3><p>Política de privacidade e material de LGPD disponíveis para análise antes da implantação.</p></article>
+          <article class="explorer-security-card"><div class="explorer-security-icon"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16"/><path d="M7 7V5a5 5 0 0 1 10 0v2"/><rect x="5" y="7" width="14" height="14" rx="2"/></svg></div><h3>Controle de acesso</h3><p>Atualizações de conteúdo e dados operacionais ficam organizados para a equipe responsável.</p></article>
+          <article class="explorer-security-card"><div class="explorer-security-icon"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div><h3>Monitoramento contínuo</h3><p>Acompanhamento de uso, dúvidas recorrentes e sinais operacionais para corrigir rotas e conteúdo.</p></article>
+        </div>
+      </div>
+    </section>
+
   
     <!-- CHAT LLM SECTION -->
     <section id="demo" class="section chat-section chat-explorer" style="position: relative; overflow: hidden; padding: 6rem 0; display: flex; align-items: center;">
@@ -782,7 +1021,7 @@
             <h2 class="h1" style="color: white; margin-bottom: 1.5rem;">Pronto para ativar o turismo inteligente da sua cidade?</h2>
             <p class="body-large" style="margin-bottom: 2.5rem; opacity: 0.9;">Leve atendimento 24/7, QR Codes, totens conversacionais e dados de fluxo turístico para uma única operação.</p>
             <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;" class="cta-button-wrapper">
-              <button class="trigger-wa-modal btn btn-primary float-hover" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1.25rem; padding: 1rem 2.5rem;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.28 14.3c-.22.61-1.28 1.15-1.78 1.22-.43.06-1.02.13-3.23-.79-2.66-1.11-4.38-3.83-4.52-4.01-.13-.19-1.08-1.44-1.08-2.75 0-1.31.68-1.95.92-2.22.24-.26.52-.33.69-.33.17 0 .34 0 .49.01.16.01.37-.06.57.43.21.5.73 1.77.79 1.9.06.13.1.28.01.47-.08.19-.13.31-.26.46-.13.15-.28.33-.39.46-.13.14-.27.29-.12.56.15.26.68 1.13 1.46 1.83.99.9 1.84 1.18 2.1 1.31.26.13.41.11.56-.06.15-.17.65-.75.82-1.01.17-.26.34-.22.58-.13.24.09 1.53.72 1.79.85.26.13.43.19.5.3.06.11.06.64-.16 1.25z"/></svg>  Falar com Especialista </button>
+              <button class="trigger-wa-modal btn btn-primary float-hover" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1.25rem; padding: 1rem 2.5rem;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.28 14.3c-.22.61-1.28 1.15-1.78 1.22-.43.06-1.02.13-3.23-.79-2.66-1.11-4.38-3.83-4.52-4.01-.13-.19-1.08-1.44-1.08-2.75 0-1.31.68-1.95.92-2.22.24-.26.52-.33.69-.33.17 0 .34 0 .49.01.16.01.37-.06.57.43.21.5.73 1.77.79 1.9.06.13.1.28.01.47-.08.19-.13.31-.26.46-.13.15-.28.33-.39.46-.13.14-.27.29-.12.56.15.26.68 1.13 1.46 1.83.99.9 1.84 1.18 2.1 1.31.26.13.41.11.56-.06.15-.17.65-.75.82-1.01.17-.26.34-.22.58-.13.24.09 1.53.72 1.79.85.26.13.43.19.5.3.06.11.06.64-.16 1.25z"/></svg> Chamar no WhatsApp </button>
               <div class="text-small" style="opacity: 0.7;">Diagnóstico personalizado • implantação guiada • suporte dedicado</div>
             </div>
           </div>
@@ -971,6 +1210,10 @@
 
   </main>
 
+  <button class="trigger-wa-modal explorer-fixed-whatsapp" aria-label="Chamar no WhatsApp">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.28 14.3c-.22.61-1.28 1.15-1.78 1.22-.43.06-1.02.13-3.23-.79-2.66-1.11-4.38-3.83-4.52-4.01-.13-.19-1.08-1.44-1.08-2.75 0-1.31.68-1.95.92-2.22.24-.26.52-.33.69-.33.17 0 .34 0 .49.01.16.01.37-.06.57.43.21.5.73 1.77.79 1.9.06.13.1.28.01.47-.08.19-.13.31-.26.46-.13.15-.28.33-.39.46-.13.14-.27.29-.12.56.15.26.68 1.13 1.46 1.83.99.9 1.84 1.18 2.1 1.31.26.13.41.11.56-.06.15-.17.65-.75.82-1.01.17-.26.34-.22.58-.13.24.09 1.53.72 1.79.85.26.13.43.19.5.3.06.11.06.64-.16 1.25z"/></svg>
+  </button>
+
   
 
     <footer style="background: var(--dark-header); color: #999; border-top: 1px solid rgba(255,255,255,0.05); padding: 4rem 0 2rem; margin-top: 0;">
@@ -989,6 +1232,7 @@
           <ul style="display: flex; flex-direction: column; gap: 0.75rem;" class="text-small">
             <li><a href="#solucao" style="transition: color 0.2s;">Solução</a></li>
             <li><a href="#ecossistema" style="transition: color 0.2s;">Ecossistema</a></li>
+            <li><a href="#totens" style="transition: color 0.2s;">Totens</a></li>
             <li><a href="#metricas" style="transition: color 0.2s;">Métricas</a></li>
             <li><a href="#demo" style="transition: color 0.2s;">Demo</a></li>
           </ul>
@@ -998,6 +1242,10 @@
           <h4 style="color: white; margin-bottom: 1.5rem; font-weight: 600; font-size: 1.125rem;">A Empresa</h4>
           <ul style="display: flex; flex-direction: column; gap: 0.75rem;" class="text-small">
             <li><a href="#inicio" style="transition: color 0.2s;">Ê-Bot Explorer</a></li>
+            <li><a href="https://êbot.com" target="_blank" rel="noopener" style="transition: color 0.2s;">Site oficial Ê-Bot</a></li>
+            <li><a href="https://êbot.com/produtos.html" target="_blank" rel="noopener" style="transition: color 0.2s;">Ê-Bot Clinical</a></li>
+            <li><a href="https://êbot.com/produtos.html" target="_blank" rel="noopener" style="transition: color 0.2s;">Ê-Bot API</a></li>
+            <li><a href="https://êbot.com/produtos.html" target="_blank" rel="noopener" style="transition: color 0.2s;">Ê-Bot Dash</a></li>
             <li><a href="#implantacao" style="transition: color 0.2s;">Implantação</a></li>
             <li><button class="trigger-wa-modal" style="transition: color 0.2s; color: inherit; background: transparent; border: 0; padding: 0; font: inherit; cursor: pointer;">Fale Conosco</button></li>
           </ul>
@@ -1006,8 +1254,8 @@
         <div style="flex: 1; min-width: 150px;">
           <h4 style="color: white; margin-bottom: 1.5rem; font-weight: 600; font-size: 1.125rem;">Legal e Privacidade</h4>
           <ul style="display: flex; flex-direction: column; gap: 0.75rem;" class="text-small">
-            <li><span style="transition: color 0.2s;">Aviso de Privacidade</span></li>
-            <li><span style="transition: color 0.2s;">Conformidade LGPD</span></li>
+            <li><button class="open-pdf-modal" data-pdf-title="Política de Privacidade Ê-Bot Explorer" data-pdf-src="./assets/pdf/ebot_politica_privacidade.pdf" style="transition: color 0.2s; color: inherit; background: transparent; border: 0; padding: 0; font: inherit; cursor: pointer;">Aviso de Privacidade</button></li>
+            <li><button class="open-pdf-modal" data-pdf-title="LGPD Ê-Bot Explorer" data-pdf-src="./assets/pdf/ebot_LGPD.pdf" style="transition: color 0.2s; color: inherit; background: transparent; border: 0; padding: 0; font: inherit; cursor: pointer;">Conformidade LGPD</button></li>
             <li><span style="transition: color 0.2s;">Termos de Uso</span></li>
           </ul>
         </div>
@@ -1022,6 +1270,161 @@
       </div>
     </div>
   </footer>
+
+  <div class="pdf-modal-overlay" id="pdfModal" aria-hidden="true">
+    <div class="pdf-modal-card" role="dialog" aria-modal="true" aria-labelledby="pdfModalTitle">
+      <div class="pdf-modal-header">
+        <strong id="pdfModalTitle">Documento</strong>
+        <div class="pdf-modal-actions">
+          <a class="btn btn-primary" id="pdfModalDownload" href="#" download>Baixar PDF</a>
+          <button class="pdf-modal-close" id="pdfModalClose" aria-label="Fechar modal">×</button>
+        </div>
+      </div>
+      <iframe class="pdf-modal-frame" id="pdfModalFrame" title="Visualizador de PDF"></iframe>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('pdfModal');
+      const frame = document.getElementById('pdfModalFrame');
+      const title = document.getElementById('pdfModalTitle');
+      const download = document.getElementById('pdfModalDownload');
+      const close = document.getElementById('pdfModalClose');
+
+      if (!modal || !frame || !title || !download || !close) return;
+
+      const openPdfModal = (src, label) => {
+        frame.src = src;
+        title.textContent = label;
+        download.href = src;
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const closePdfModal = () => {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        setTimeout(() => { frame.src = ''; }, 280);
+      };
+
+      document.addEventListener('click', (event) => {
+        const trigger = event.target.closest('.open-pdf-modal');
+        if (trigger) {
+          event.preventDefault();
+          openPdfModal(trigger.dataset.pdfSrc, trigger.dataset.pdfTitle || 'Documento');
+        }
+
+        if (event.target === modal || event.target.closest('#pdfModalClose')) {
+          closePdfModal();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modal.classList.contains('active')) closePdfModal();
+      });
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.Swiper) return;
+
+      new Swiper('.explorer-testimonials-swiper', {
+        loop: true,
+        loopAdditionalSlides: 8,
+        speed: 5200,
+        spaceBetween: 16,
+        grabCursor: true,
+        slidesPerView: 'auto',
+        freeMode: {
+          enabled: true,
+          momentum: false,
+        },
+        autoplay: {
+          delay: 0,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        },
+        pagination: {
+          el: '.explorer-testimonials-swiper .swiper-pagination',
+          clickable: true,
+        },
+      });
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.gsap || !window.ScrollTrigger) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.utils.toArray('main > section').forEach((section) => {
+        gsap.fromTo(section,
+          { autoAlpha: 0.72, y: 34 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 82%',
+              end: 'bottom 18%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      });
+
+      gsap.utils.toArray('.explorer-kpi, .explorer-flow-card, .explorer-journey-card, .explorer-impact-card, .explorer-client-card, .explorer-security-card, .explorer-testimonial-card').forEach((el) => {
+        gsap.fromTo(el,
+          { autoAlpha: 0, y: 28, scale: 0.985 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.72,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 88%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      });
+
+      gsap.utils.toArray('.h1, .h2').forEach((heading) => {
+        gsap.fromTo(heading,
+          { autoAlpha: 0, y: 22, filter: 'blur(6px)' },
+          {
+            autoAlpha: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.82,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: heading,
+              start: 'top 88%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      });
+
+      gsap.fromTo('.explorer-light-demo',
+        { autoAlpha: 0, y: 32, rotate: -2 },
+        { autoAlpha: 1, y: 0, rotate: 0, duration: 1, ease: 'power3.out', delay: 0.15 }
+      );
+    });
+  </script>
 
   <script src="js/utils.js"></script>
   <script src="js/navigation.js"></script>
